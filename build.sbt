@@ -55,6 +55,7 @@ lazy val testingJvmSettings = Seq(
  * RELEASE
  */
 lazy val releaseSettings: Seq[Setting[_]] = Seq(
+  ThisBuild / versionScheme := Some("early-semver"),
   ThisBuild / githubWorkflowArtifactUpload := false,
   ThisBuild / githubWorkflowBuild := Seq(
     WorkflowStep.Sbt(
