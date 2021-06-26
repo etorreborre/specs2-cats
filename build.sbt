@@ -15,7 +15,7 @@ lazy val specs2Cats = project.in(file(".")).
 val Scala3 = "3.0.0"
 
 val dependencies = Seq(
-      "org.specs2" %% "specs2-core" % "SPECS2-5.0.0-RC0",
+      "org.specs2" %% "specs2-core" % "5.0.0-ALPHA-03",
       "org.typelevel" %% "cats-core" % "2.6.1",
       "org.typelevel" %% "cats-effect" % "3.1.1")
 
