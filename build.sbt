@@ -8,7 +8,9 @@ lazy val specs2Cats = project
   )
   .aggregate(
     cats.jvm,
-    cats.js
+    cats.js,
+    catsEffect.jvm,
+    catsEffect.js,
   )
 
 val platforms = List(JVMPlatform, JSPlatform)
@@ -21,23 +23,36 @@ lazy val cats = crossProject(platforms: _*)
   .settings(
     organization := "org.specs2",
     name := "specs2-cats",
-    ThisBuild / crossScalaVersions := Seq(Scala3),
-    ThisBuild / scalaVersion := Scala3,
-    dependencies,
+    catsDependencies,
     buildSettings
   )
   .jvmSettings(buildJvmSettings)
   .jsSettings(buildJsSettings)
 
+lazy val catsEffect = crossProject(platforms: _*)
+  .withoutSuffixFor(jvm)
+  .in(file("cats-effect"))
+  .settings(
+    organization := "org.specs2",
+    name := "specs2-cats-effect",
+    catsEffectDependencies,
+    buildSettings
+  )
+  .jvmSettings(buildJvmSettings)
+  .jsSettings(buildJsSettings)
+  .dependsOn(cats)
+
 /** SETTINGS */
 
 val Scala3 = "3.0.2"
+ThisBuild / crossScalaVersions := Seq(Scala3)
+ThisBuild / scalaVersion := Scala3
 
-val dependencies = libraryDependencies ++= Seq(
+val catsDependencies = libraryDependencies ++= Seq(
   "org.specs2" %%% "specs2-core" % "5.0.0-RC-09",
-  "org.typelevel" %%% "cats-core" % "2.6.1",
-  "org.typelevel" %%% "cats-effect" % "3.2.8"
+  "org.typelevel" %%% "cats-core" % "2.6.1"
 )
+val catsEffectDependencies = libraryDependencies += "org.typelevel" %%% "cats-effect" % "3.2.8"
 
 lazy val rootSettings =
   compilationSettings ++
