@@ -66,8 +66,7 @@ lazy val rootSettings =
 
 lazy val buildSettings =
   compilationSettings ++
-    testingSettings ++
-    releaseSettings
+    testingSettings
 
 lazy val buildJvmSettings = testingJvmSettings
 lazy val buildJsSettings = testingJsSettings
