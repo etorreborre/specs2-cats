@@ -18,8 +18,8 @@ trait IOMatchers extends RunTimedMatchers[IO]:
   protected[specs2] override def attemptRun[T](check: ValueCheck[T], duration: Option[FiniteDuration]): IOMatcher[T] =
     IOMatcher(check, duration)
 
-  case class IOMatcher[T](check: ValueCheck[T],
-                          duration: Option[FiniteDuration]) extends TimedMatcher[T](check, duration):
+  case class IOMatcher[T](check: ValueCheck[T], duration: Option[FiniteDuration])
+      extends TimedMatcher[T](check, duration):
 
     def checkIOWithDuration[S <: IO[T]](e: Expectable[S], d: FiniteDuration): Result =
       checkWithDuration(e.value, d)

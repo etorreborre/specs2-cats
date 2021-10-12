@@ -7,10 +7,9 @@ import cats.effect.unsafe.*
 import scala.concurrent.duration.*
 
 /** This is
-  *
   */
 trait IOExecution:
-  given [T : AsResult]: AsExecution[IO[T]] with
+  given [T: AsResult]: AsExecution[IO[T]] with
     def execute(io: =>IO[T]): Execution =
       Execution.withEnvAsync { env =>
         given IORuntime = makeIORuntime(env)
@@ -24,7 +23,8 @@ trait IOExecution:
       blocking = env.executionContext,
       scheduler = makeScheduler(env),
       shutdown = () => (),
-      config = IORuntimeConfig())
+      config = IORuntimeConfig()
+    )
 
   private def makeScheduler(env: Env): Scheduler =
     new Scheduler:
