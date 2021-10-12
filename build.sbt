@@ -49,7 +49,7 @@ ThisBuild / crossScalaVersions := Seq(Scala3)
 ThisBuild / scalaVersion := Scala3
 
 val catsDependencies = libraryDependencies ++= Seq(
-  "org.specs2" %%% "specs2-core" % "5.0.0-RC-10",
+  "org.specs2" %%% "specs2-core" % "5.0.0-RC-15",
   "org.typelevel" %%% "cats-core" % "2.6.1"
 )
 val catsEffectDependencies = libraryDependencies += "org.typelevel" %%% "cats-effect" % "3.2.8"
