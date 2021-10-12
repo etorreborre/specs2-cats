@@ -10,7 +10,7 @@ lazy val specs2Cats = project
     cats.jvm,
     cats.js,
     catsEffect.jvm,
-    catsEffect.js,
+    catsEffect.js
   )
 
 val platforms = List(JVMPlatform, JSPlatform)
