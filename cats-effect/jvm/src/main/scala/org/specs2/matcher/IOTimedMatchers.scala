@@ -5,6 +5,10 @@ import scala.concurrent.TimeoutException
 import scala.concurrent.duration.FiniteDuration
 import org.specs2.execute.*, Result.*
 
+/** Matchers for `IO` that will be executed synchronously. This is unlikely what you want, consider instead
+  * `IOMatchers`. These matchers are better used with test libraries which don't support asynchronous execution (like
+  * JUnit).
+  */
 trait IOTimedMatchers extends RunTimedMatchers[IO]:
 
   import cats.effect.unsafe.implicits.global

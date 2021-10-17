@@ -12,6 +12,10 @@ import org.specs2.text.Regexes.matchesSafely
 
 import scala.concurrent.Future
 
+/** Matchers for `IO`. These will run asynchronously on the (overridable) `IORuntime`.
+  *
+  * If for some reason you need your tests to be executed synchronously, see the JVM-only `IOTimedMatchers`.
+  */
 trait IOMatchers extends ValueChecks:
 
   given executionEnv: ExecutionEnv =
