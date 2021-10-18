@@ -44,7 +44,7 @@ lazy val catsEffect = crossProject(platforms: _*)
 
 /** SETTINGS */
 
-val Scala3 = "3.0.2"
+val Scala3 = "3.1.0"
 ThisBuild / crossScalaVersions := Seq(Scala3)
 ThisBuild / scalaVersion := Scala3
 
