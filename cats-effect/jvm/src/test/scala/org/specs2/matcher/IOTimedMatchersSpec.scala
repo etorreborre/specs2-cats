@@ -5,7 +5,7 @@ import cats.effect.*
 import org.specs2.concurrent.*
 import scala.concurrent.duration.*
 
-class IOMatchersSpec extends Specification with IOMatchers with IOExecution:
+class IOTimedMatchersSpec extends Specification with IOTimedMatchers with IOExecution:
   def is = s2"""
 
   we can check that an IO value succeeds $matcher1
