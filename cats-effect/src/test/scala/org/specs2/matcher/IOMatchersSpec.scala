@@ -18,7 +18,7 @@ class IOMatchersSpec extends Specification with IOMatchers with IOExecution:
   """
 
   def matcher1 = IO(1) must beOk
-  def matcher2 = IO(1) must beOkWithValue(1)
+  def matcher2 = IO(1) must beOk(1)
   def matcher3 = IO.raiseError(new Exception) must beKo
   def matcher4 = IO.raiseError(new Exception("a very special message")) must beKo("a very special message")
 

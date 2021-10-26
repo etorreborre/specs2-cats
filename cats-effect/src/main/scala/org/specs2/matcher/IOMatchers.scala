@@ -22,16 +22,10 @@ trait IOMatchers extends ValueChecks:
   given ioRuntime: IORuntime = IORuntime.global
 
   def beOk[T]: FutureMatcher[IO[T]] =
-    beOk[T, T](identity)
-
-  def beOk[T, R](f: T => R): FutureMatcher[IO[T]] =
-    FutureMatcher((_: IO[T]).map(f).unsafeToFuture())
+    FutureMatcher((_: IO[T]).unsafeToFuture())
 
   def beOk[T](check: ValueCheck[T]): FutureMatcher[IO[T]] =
     FutureMatcher((_: IO[T]).map(check.check).unsafeToFuture())
-
-  def beOkWithValue[T](t: T): FutureMatcher[IO[T]] =
-    beOk(new BeEqualTo(t))
 
   def beKo[T]: FutureMatcher[IO[T]] =
     FutureMatcher { (action: IO[T]) =>

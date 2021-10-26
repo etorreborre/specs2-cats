@@ -18,7 +18,7 @@ class SyncIOMatchersSpec extends Specification with SyncIOMatchers with SyncIOEx
   """
 
   def matcher1 = SyncIO(1) must beOk
-  def matcher2 = SyncIO(1) must beOk.withValue(1)
+  def matcher2 = SyncIO(1) must beOk(1)
   def matcher3 = SyncIO.raiseError(new Exception) must beKo
   def matcher4 = SyncIO.raiseError(new Exception("a very special message")) must beKo.withThrowable[Exception](
     "a very special message"
