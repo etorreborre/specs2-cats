@@ -30,6 +30,7 @@ lazy val cats = crossProject(platforms: _*)
   .jsSettings(buildJsSettings)
 
 lazy val catsEffect = crossProject(platforms: _*)
+  .crossType(CrossType.Pure)
   .withoutSuffixFor(jvm)
   .in(file("cats-effect"))
   .settings(
