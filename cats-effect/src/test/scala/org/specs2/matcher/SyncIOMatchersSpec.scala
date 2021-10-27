@@ -22,6 +22,8 @@ class SyncIOMatchersSpec extends Specification with SyncIOMatchers with SyncIOEx
   def matcher1 = SyncIO(1) must beSuccess
   def matcher2 = SyncIO(1) must beSuccess(1)
   def matcher3 = SyncIO.raiseError(new Exception) must beError
-  def matcher4 = SyncIO.raiseError(new MyException("my message")) must beError(new MyException("my message"))
+  def matcher4 = SyncIO.raiseError(new MyException("my message")) must beError(beLike {
+    case ex: MyException => ex.getMessage === "my message"
+  })
 
   def result1 = SyncIO("ok" === "ok")
