@@ -21,27 +21,47 @@ trait IOMatchers extends ValueChecks:
 
   given ioRuntime: IORuntime = IORuntime.global
 
-  def beOk[T]: FutureMatcher[IO[T]] =
-    FutureMatcher((_: IO[T]).unsafeToFuture())
-
-  def beOk[T](check: ValueCheck[T]): FutureMatcher[IO[T]] =
-    FutureMatcher((_: IO[T]).map(check.check).unsafeToFuture())
-
-  def beKo[T]: FutureMatcher[IO[T]] =
-    FutureMatcher { (action: IO[T]) =>
-      action.map(_ => Failure("a failure was expected")).recover(_ => Success("ok")).unsafeToFuture()
-    }
-
-  def beKo[T](message: String): FutureMatcher[IO[T]] =
-    FutureMatcher { (action: IO[T]) =>
-      action
-        .map(_ => Failure(s"a failure with message $message was expected"))
-        .recover {
-          case t if t.getMessage `matchesSafely` message => Success("ok")
-          case t => Failure(s"the action failed with message ${t.getMessage}. Expected: $message"),
+  extension [A](ioa: IO[A])
+    private def unsafeFoldOutcome[B](canceled: =>B, errored: Throwable => B, completed: A => B): Future[B] =
+      ioa.start
+        .flatMap(_.join)
+        .flatMap { outcome =>
+          outcome.fold(IO(canceled), e => IO(errored(e)), _.map(completed))
         }
         .unsafeToFuture()
-    }
+
+  def beSuccess[A]: FutureMatcher[IO[A]] =
+    beSuccess(ValueCheck.alwaysOk)
+
+  def beSuccess[A](check: ValueCheck[A]): FutureMatcher[IO[A]] =
+    FutureMatcher(
+      _.unsafeFoldOutcome(
+        Failure("The IO was canceled"),
+        Error("The IO raised an error", _),
+        check.check
+      )
+    )
+
+  def beError[A]: FutureMatcher[IO[A]] =
+    beError(ValueCheck.alwaysOk)
+
+  def beError[A](check: ValueCheck[Throwable]): FutureMatcher[IO[A]] =
+    FutureMatcher(
+      _.>>(IO.trace).unsafeFoldOutcome(
+        Failure("The IO was canceled"),
+        check.check(_),
+        trace => Failure("The IO succeeded but it was expected to raise an error", trace = trace.toList)
+      )
+    )
+
+  def beCanceled[A]: FutureMatcher[IO[A]] =
+    FutureMatcher(
+      _.>>(IO.trace).unsafeFoldOutcome(
+        Success("The IO was canceled"),
+        Error("The IO raised an error", _),
+        trace => Failure("The IO succeeded but it was expected to cancel", trace = trace.toList)
+      )
+    )
 
   extension [T](action: IO[T])
     infix def must(m: FutureMatcher[IO[T]]): Future[Result] =
