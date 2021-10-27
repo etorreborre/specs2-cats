@@ -49,7 +49,7 @@ trait IOMatchers extends ValueChecks:
     FutureMatcher(
       _.>>(IO.trace).unsafeFoldOutcome(
         Failure("The IO was canceled"),
-        check.check(_),
+        check.check,
         trace => Failure("The IO succeeded but it was expected to raise an error", trace = trace.toList)
       )
     )
