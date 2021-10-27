@@ -15,7 +15,7 @@ trait SyncIOMatchers extends ValueChecks:
     private def unsafeFoldOutcome[B](errored: Throwable => B, completed: A => B): B =
       sioa.attempt
         .map {
-          case Left(ex) => println(ex); errored(ex)
+          case Left(ex) => errored(ex)
           case Right(a) => completed(a)
         }
         .unsafeRunSync()
