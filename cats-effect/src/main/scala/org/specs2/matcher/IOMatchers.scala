@@ -7,6 +7,7 @@ import cats.syntax.all.*
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.execute.Failure
 import org.specs2.execute.Result
+import org.specs2.execute.Error
 import org.specs2.execute.Success
 import org.specs2.text.Regexes.matchesSafely
 
@@ -21,33 +22,46 @@ trait IOMatchers extends ValueChecks:
 
   given ioRuntime: IORuntime = IORuntime.global
 
-  def beOk[T]: FutureMatcher[IO[T]] =
-    beOk[T, T](identity)
+  private def mkMatcher[A, B](transform: IO[A] => IO[B])(
+      canceled: =>Result,
+      errored: Throwable => Result,
+      completed: B => Result
+  ): FutureMatcher[IO[A]] =
+    new FutureMatcher[IO[A]]:
+      def apply[IOA <: IO[A]](ioa: IOA) =
+        transform(ioa).start
+          .flatMap(_.join)
+          .flatMap { outcome =>
+            outcome.fold(IO(canceled), e => IO(errored(e)), _.map(completed))
+          }
+          .unsafeToFuture()
 
-  def beOk[T, R](f: T => R): FutureMatcher[IO[T]] =
-    FutureMatcher((_: IO[T]).map(f).unsafeToFuture())
+  def beSuccess[A]: FutureMatcher[IO[A]] =
+    beSuccess(ValueCheck.alwaysOk)
 
-  def beOk[T](check: ValueCheck[T]): FutureMatcher[IO[T]] =
-    FutureMatcher((_: IO[T]).map(check.check).unsafeToFuture())
+  def beSuccess[A](check: ValueCheck[A]): FutureMatcher[IO[A]] =
+    mkMatcher(identity[IO[A]])(
+      Failure("The IO was canceled"),
+      Error("The IO raised an error", _),
+      check.check
+    )
 
-  def beOkWithValue[T](t: T): FutureMatcher[IO[T]] =
-    beOk(new BeEqualTo(t))
+  def beError[A]: FutureMatcher[IO[A]] =
+    beError(ValueCheck.alwaysOk)
 
-  def beKo[T]: FutureMatcher[IO[T]] =
-    FutureMatcher { (action: IO[T]) =>
-      action.map(_ => Failure("a failure was expected")).recover(_ => Success("ok")).unsafeToFuture()
-    }
+  def beError[A](check: ValueCheck[Throwable]): FutureMatcher[IO[A]] =
+    mkMatcher(_ >> IO.trace)(
+      Failure("The IO was canceled"),
+      check.check,
+      trace => Failure("The IO succeeded but it was expected to raise an error", trace = trace.toList)
+    )
 
-  def beKo[T](message: String): FutureMatcher[IO[T]] =
-    FutureMatcher { (action: IO[T]) =>
-      action
-        .map(_ => Failure(s"a failure with message $message was expected"))
-        .recover {
-          case t if t.getMessage `matchesSafely` message => Success("ok")
-          case t => Failure(s"the action failed with message ${t.getMessage}. Expected: $message"),
-        }
-        .unsafeToFuture()
-    }
+  def beCanceled[A]: FutureMatcher[IO[A]] =
+    mkMatcher(_ >> IO.trace)(
+      Success("The IO was canceled"),
+      Error("The IO raised an error", _),
+      trace => Failure("The IO succeeded but it was expected to cancel", trace = trace.toList)
+    )
 
   extension [T](action: IO[T])
     infix def must(m: FutureMatcher[IO[T]]): Future[Result] =

@@ -8,18 +8,24 @@ import scala.concurrent.duration.*
 class IOMatchersSpec extends Specification with IOMatchers with IOExecution:
   def is = s2"""
 
-  we can check that an IO value succeeds $matcher1
-  we can check that an IO value returns a specific value $matcher2
-  we can check that an IO value raises an error $matcher3
-  we can check that an IO value raises an error with a specific message $matcher4
+  we can check that an IO succeeds $matcher1
+  we can check that an IO succeeds with a specific value $matcher2
+  we can check that an IO raises an error $matcher3
+  we can check that an IO raises a specific error $matcher4
+  we can check that an IO cancels $matcher5
 
   an IO value can be returned directly as a result $result1
 
   """
 
-  def matcher1 = IO(1) must beOk
-  def matcher2 = IO(1) must beOkWithValue(1)
-  def matcher3 = IO.raiseError(new Exception) must beKo
-  def matcher4 = IO.raiseError(new Exception("a very special message")) must beKo("a very special message")
+  class MyException(msg: String) extends Exception(msg)
+
+  def matcher1 = IO(1) must beSuccess
+  def matcher2 = IO(1) must beSuccess(1)
+  def matcher3 = IO.raiseError(new Exception) must beError
+  def matcher4 = IO.raiseError(new MyException("my message")) must beError(beLike {
+    case ex: MyException => ex.getMessage === "my message"
+  })
+  def matcher5 = IO.canceled must beCanceled
 
   def result1 = IO("ok" === "ok")

@@ -98,10 +98,12 @@ lazy val testingSettings = Seq(
 
 lazy val testingJvmSettings = Seq(javaOptions ++= Seq("-Xmx3G", "-Xss4M"), Test / fork := true)
 
+import org.scalajs.linker.interface.ESVersion
 lazy val testingJsSettings = Seq(
   Test / fork := false,
   Test / parallelExecution := false,
-  Test / scalaJSStage := FastOptStage
+  Test / scalaJSStage := FastOptStage,
+  scalaJSLinkerConfig ~= { _.withESFeatures(_.withESVersion(ESVersion.ES2018)) }
 )
 
 /** RELEASE
