@@ -23,9 +23,7 @@ class IOMatchersSpec extends Specification with IOMatchers with IOExecution:
   def matcher1 = IO(1) must beSuccess
   def matcher2 = IO(1) must beSuccess(1)
   def matcher3 = IO.raiseError(new Exception) must beError
-  def matcher4 = IO.raiseError(new MyException("my message")) must beError(beLike {
-    case ex: MyException => ex.getMessage === "my message"
-  })
+  def matcher4 = IO.raiseError(new MyException("my message")) must beError(beException[MyException]("my message"))
   def matcher5 = IO.canceled must beCanceled
 
   def result1 = IO("ok" === "ok")
