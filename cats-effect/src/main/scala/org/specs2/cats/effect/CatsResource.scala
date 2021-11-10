@@ -14,8 +14,10 @@ trait CatsResource[T](using ioRuntime: IORuntime = IORuntime.global) extends Spe
 
   def resource: Resource[IO, T]
 
-  protected def acquire: Future[T] = resource.allocated.flatMap { (t, close) =>
-    finalizer.complete(close).as(t)
-  }.unsafeToFuture()(ioRuntime)
-  
+  protected def acquire: Future[T] = resource.allocated
+    .flatMap { (t, close) =>
+      finalizer.complete(close).as(t)
+    }
+    .unsafeToFuture()(ioRuntime)
+
   protected def release(resource: T): Execution = finalizer.get.flatten
