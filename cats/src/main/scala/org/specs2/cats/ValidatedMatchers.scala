@@ -1,7 +1,9 @@
-package org.specs2.matcher
+package org.specs2.cats
 
 import cats.data.Validated
-import scala.language.adhocExtensions
+import org.specs2.matcher.OptionLikeCheckedMatcher
+import org.specs2.matcher.OptionLikeMatcher
+import org.specs2.matcher.ValueCheck
 
 /** Matchers for the Validated datatype
   */

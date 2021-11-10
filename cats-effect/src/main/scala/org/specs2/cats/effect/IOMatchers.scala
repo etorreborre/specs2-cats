@@ -1,14 +1,16 @@
-package org.specs2
-package matcher
+package org.specs2.cats.effect
 
 import cats.effect.IO
 import cats.effect.unsafe.IORuntime
 import cats.syntax.all.*
 import org.specs2.concurrent.ExecutionEnv
+import org.specs2.execute.Error
 import org.specs2.execute.Failure
 import org.specs2.execute.Result
-import org.specs2.execute.Error
 import org.specs2.execute.Success
+import org.specs2.matcher.FutureMatcher
+import org.specs2.matcher.ValueCheck
+import org.specs2.matcher.ValueChecks
 import org.specs2.text.Regexes.matchesSafely
 
 import scala.concurrent.Future

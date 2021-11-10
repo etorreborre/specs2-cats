@@ -1,8 +1,9 @@
-package org.specs2
-package matcher
+package org.specs2.cats
 
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.Invalid
+import cats.data.Validated.Valid
+import org.specs2.Specification
 
 class ValidatedMatchersSpec extends Specification with ValidatedMatchers:
   def is = s2"""

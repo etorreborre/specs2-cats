@@ -1,7 +1,7 @@
-package org.specs2
-package matcher
+package org.specs2.cats
 
 import cats.data.*
+import org.specs2.Specification
 
 class NonEmptyMatchersSpec extends Specification with NonEmptyMatchers:
   def is = s2"""

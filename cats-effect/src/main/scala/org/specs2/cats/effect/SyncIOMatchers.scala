@@ -1,11 +1,13 @@
-package org.specs2
-package matcher
+package org.specs2.cats.effect
 
 import cats.effect.SyncIO
-import execute.ResultImplicits.*
-import org.specs2.execute.Result
 import org.specs2.execute.Error
 import org.specs2.execute.Failure
+import org.specs2.execute.Result
+import org.specs2.execute.ResultImplicits.*
+import org.specs2.matcher.Matcher
+import org.specs2.matcher.ValueCheck
+import org.specs2.matcher.ValueChecks
 
 import scala.reflect.ClassTag
 

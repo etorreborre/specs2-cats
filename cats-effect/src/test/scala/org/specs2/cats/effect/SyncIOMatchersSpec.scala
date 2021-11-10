@@ -1,8 +1,9 @@
-package org.specs2
-package matcher
+package org.specs2.cats.effect
 
 import cats.effect.*
+import org.specs2.Specification
 import org.specs2.concurrent.*
+
 import scala.concurrent.duration.*
 
 class SyncIOMatchersSpec extends Specification with SyncIOMatchers with SyncIOExecution:
