@@ -17,12 +17,10 @@ import scala.concurrent.Future
 
 /** Matchers for `IO`. These will run asynchronously on the (overridable) `IORuntime`.
   */
-trait IOMatchers extends ValueChecks:
-
-  given executionEnv: ExecutionEnv =
-    ExecutionEnv.fromGlobalExecutionContext
-
-  given ioRuntime: IORuntime = IORuntime.global
+trait IOMatchers(using
+    executionEnv: ExecutionEnv = ExecutionEnv.fromGlobalExecutionContext,
+    ioRuntime: IORuntime = IORuntime.global
+) extends ValueChecks:
 
   extension [A](ioa: IO[A])
     private def unsafeFoldOutcome[B](canceled: =>B, errored: Throwable => B, completed: A => B): Future[B] =
