@@ -6,7 +6,7 @@ import cats.effect.Resource
 import org.specs2.Specification
 import org.specs2.execute.Result
 
-trait LocalCatsResourceSpec extends Specification, IOExecution, IOMatchers, CatsResource[Ref[IO, Int]]:
+trait LocalCatsResourceSpec extends Specification, IOMatchers, CatsResource[Ref[IO, Int]]:
 
   sequential
 
@@ -23,11 +23,11 @@ trait LocalCatsResourceSpec extends Specification, IOExecution, IOMatchers, Cats
   """
 
   def reacquired = { (ref: Ref[IO, Int]) =>
-    ref.getAndUpdate(_ + 1).map(_ === 0)
+    ref.getAndUpdate(_ + 1) === 0
   }
 
   def shared = { (ref: Ref[IO, Int]) =>
-    ref.getAndUpdate(_ + 1).map(_ === 1)
+    ref.getAndUpdate(_ + 1) === 1
   }
 
   def notReleased = released.get must beSuccess(false)
