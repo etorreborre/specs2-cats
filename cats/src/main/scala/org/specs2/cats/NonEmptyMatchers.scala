@@ -1,4 +1,4 @@
-package org.specs2.matcher
+package org.specs2.cats
 
 import cats.data.*
 import org.specs2.collection.*

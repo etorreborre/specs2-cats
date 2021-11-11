@@ -1,4 +1,4 @@
-package org.specs2.matcher
+package org.specs2.cats.effect
 
 import cats.effect.SyncIO
 import org.specs2.execute.AsResult
