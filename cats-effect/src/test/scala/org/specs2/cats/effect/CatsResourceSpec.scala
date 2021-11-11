@@ -23,11 +23,11 @@ trait LocalCatsResourceSpec extends Specification, IOMatchers, CatsResource[Ref[
   """
 
   def reacquired = { (ref: Ref[IO, Int]) =>
-    ref.getAndUpdate(_ + 1) === 0
+    ref.getAndUpdate(_ + 1) must beSuccess(0)
   }
 
   def shared = { (ref: Ref[IO, Int]) =>
-    ref.getAndUpdate(_ + 1) === 1
+    ref.getAndUpdate(_ + 1) must beSuccess(1)
   }
 
   def notReleased = released.get must beSuccess(false)
