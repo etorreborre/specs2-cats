@@ -8,15 +8,13 @@ import org.specs2.execute.Result
 
 trait LocalCatsResourceSpec extends Specification, IOMatchers, CatsResource[Ref[IO, Int]]:
 
-  sequential
-
   val released = Ref.unsafe[IO, Boolean](false)
 
   def resource: Resource[IO, Ref[IO, Int]] = Resource
     .eval(IO.ref(0))
     .onFinalize(released.set(true))
 
-  def is = s2"""
+  def is = sequential ^ s2"""
     The resource is re-acquired per-spec $reacquired
     The resource is shared in the spec $shared
     The resource is not prematurely released $notReleased
