@@ -6,39 +6,33 @@ import cats.effect.Resource
 import org.specs2.Specification
 import org.specs2.execute.Result
 
-trait LocalCatsResourceSpec extends Specification, IOExecution, IOMatchers, CatsResource[(Int, Int)]:
-  import LocalCatsResourceSpec.*
+trait LocalCatsResourceSpec extends Specification, IOExecution, IOMatchers, CatsResource[Ref[IO, Int]]:
 
-  val localCounter = Ref.unsafe[IO, Int](0)
+  sequential
+
   val released = Ref.unsafe[IO, Boolean](false)
 
-  def resource: Resource[IO, (Int, Int)] = Resource
-    .eval(localCounter.getAndUpdate(_ + 1).product(globalCounter.getAndUpdate(_ + 1)))
+  def resource: Resource[IO, Ref[IO, Int]] = Resource
+    .eval(IO.ref(0))
     .onFinalize(released.set(true))
 
   def is = s2"""
     The resource is re-acquired per-spec $reacquired
     The resource is shared in the spec $shared
-    The resource is shared in the spec $shared
     The resource is not prematurely released $notReleased
   """
 
-  def reacquired: ((Int, Int)) => IO[Result] = { (_, globalCount) =>
-    specCounter.getAndUpdate(_ + 1).map(globalCount === _)
+  def reacquired = { (ref: Ref[IO, Int]) =>
+    ref.getAndUpdate(_ + 1).map(_ === 0)
   }
 
-  def shared: ((Int, Int)) => Result = { (resource, _) =>
-    resource === 0
+  def shared = { (ref: Ref[IO, Int]) =>
+    ref.getAndUpdate(_ + 1).map(_ === 1)
   }
 
   def notReleased = released.get must beSuccess(false)
 
-object LocalCatsResourceSpec:
-  val globalCounter = Ref.unsafe[IO, Int](0)
-  val specCounter = Ref.unsafe[IO, Int](0)
-
 class LocalCatsResource1Spec extends LocalCatsResourceSpec
-
 class LocalCatsResource2Spec extends LocalCatsResourceSpec
 
 trait GlobalCatsResourceSpec extends Specification, IOMatchers, CatsResource[Int]:
