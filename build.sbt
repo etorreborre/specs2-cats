@@ -55,6 +55,7 @@ lazy val scalacheckEffect = crossProject(platforms: _*)
   )
   .jvmSettings(buildJvmSettings)
   .jsSettings(buildJsSettings)
+  .dependsOn(catsEffect % Test)
 
 /** SETTINGS */
 
