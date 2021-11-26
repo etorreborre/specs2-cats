@@ -3,6 +3,7 @@ package scalacheck
 package effect
 
 import cats.MonadThrow
+import cats.syntax.all.*
 import org.scalacheck.Gen
 import org.scalacheck.Prop
 import org.scalacheck.Properties
@@ -19,30 +20,17 @@ import execute.*
   */
 trait AsResultPropF extends ScalaCheckEffectPropertyCheck with AsResultPropFLowImplicits:
 
-  given asResultToPropF[F[_]: MonadThrow, R: AsResult]: Conversion[R, PropF[F]] with
-    def apply(r: R): PropF[F] =
-      r.asInstanceOf[Matchable] match
-        case p: PropF[F] @unchecked => p
-        case _ =>
-          lazy val result = ResultExecution.execute(AsResult(r))
-
-          @tailrec
-          def resultToProp(r: execute.Result): PropF[F] =
-            r match
-              case f: execute.Failure => PropF.exception(new FailureException(f))
-              case s: execute.Skipped => PropF.exception(new SkipException(s))
-              case p: execute.Pending => PropF.exception(new PendingException(p))
-              case e: execute.Error   => PropF.exception(e.exception)
-
-              case execute.DecoratedResult(_, r1) =>
-                // display the datatables on a new line
-                resultToProp(r1.updateMessage("\n" + _))
-
-              case other => PropF.passed
-
-          val prop = resultToProp(result)
-
-          prop
+  given asResultToPropF[F[_]: MonadThrow, R: AsResult]: Conversion[F[R], PropF[F]] with
+    def apply(fr: F[R]): PropF[F] =
+      PropF.effectOfPropFToPropF {
+        MonadThrow[F].map(fr) { (r: R) =>
+          val prop = AsResultProp.asResultToProp.apply(r)
+          PropF { p =>
+            val Prop.Result(status, args, collected, labels) = prop(p)
+            PropF.Result(status, args, collected, labels)
+          }
+        }
+      }
 
   /** implicit typeclass instance to create examples from a Prop */
   given propFAsExecution[F[_]: MonadThrow](using p: Parameters, pfq: FreqMap[Set[Any]] => Pretty)(using
