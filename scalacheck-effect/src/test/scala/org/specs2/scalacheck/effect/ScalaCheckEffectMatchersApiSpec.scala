@@ -4,9 +4,9 @@ package scalacheck.effect
 import _root_.cats.effect.IO
 import org.scalacheck.Prop.*
 import org.scalacheck.effect.PropF.*
-import org.scalacheck.Prop.propBoolean
 import org.scalacheck.util.{FreqMap, Pretty}
 import org.scalacheck.*
+import org.scalacheck.effect.*
 import org.specs2.cats.effect.IOExecution
 import org.specs2.Specification
 
@@ -79,17 +79,17 @@ class ScalaCheckEffectMatchersApiSpec extends Specification, ScalaCheckEffect, I
 
  Test parameters can also be specified
    the minimum number of ok tests
-   minTestsOk1
+   $minTestsOk1
 
    the verbosity of a property can be turned on and off
-   verbose1
+   $verbose1
 
   """
-  // def minTestsOk1: Prop =
-  //   propF { (i: Int) => propBoolean(i > 0) ==> (i > 0) }.set(minTestsOk = 50)
+  def minTestsOk1 =
+    propF { (i: Int) => IO(i === i) }.set(minTestsOk = 50)
 
-  // def verbose1: Prop =
-  //   propF { (i: Int) => propBoolean(i > 0) ==> (i > 0) }.verbose
+  def verbose1 =
+    propF { (i: Int) => IO(i === i) }.verbose
 
   val positiveInts = Arbitrary(Gen.choose(1, 5))
 
