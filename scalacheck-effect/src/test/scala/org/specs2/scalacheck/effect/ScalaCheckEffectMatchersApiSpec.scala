@@ -26,12 +26,6 @@ class ScalaCheckEffectMatchersApiSpec extends Specification, ScalaCheckEffect, I
     ${propF { (i: Int) => IO(i > 0 || i <= 0) }}
     using  an implication and a match result
 
-    // propBoolean is used - can be removed when scalacheck 1.15.0 is out
-    {prop { (i: Int) => propBoolean(i > 0) ==> (i must be_>(0)) }}
-    {prop { (i: Int, j: Int) => propBoolean(i > j) ==> (i must be_>(j)) }}
-    using an implication and a boolean value
-    {prop { (i: Int) => propBoolean(i > 0) ==> (i > 0) }}
-
  It is possible to specify typeclass instances for Arbitrary, Shrink, Pretty and collect
    Arbitrary
    to specify a specific arbitrary instance for a parameter
