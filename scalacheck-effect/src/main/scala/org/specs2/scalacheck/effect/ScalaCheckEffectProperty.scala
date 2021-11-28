@@ -115,31 +115,6 @@ object ScalaCheckEffectProperty:
 trait ScalaCheckEffectFunction[F[_]] extends ScalaCheckEffectProperty[F]:
   def noShrink: SelfType
 
-  def context: Option[Context]
-
-  def setContext(context: Context): SelfType
-
-  def before(action: =>Any): SelfType =
-    setContext(Before.create(action))
-
-  def after(action: =>Any): SelfType =
-    setContext(After.create(action))
-
-  def beforeAfter(beforeAction: =>Any, afterAction: =>Any): SelfType =
-    setContext(BeforeAfter.create(beforeAction, afterAction))
-
-  def around(action: Result => Result): SelfType =
-    setContext(Around.create(action))
-
-  protected def executeInContext[R: AsResult](result: =>R) = {
-    lazy val executed = result
-    context.foreach(_(executed))
-    executed.asInstanceOf[Matchable] match {
-      case p: Prop => p
-      case other   => AsResultProp.asResultToProp.apply(other.asInstanceOf[R])
-    }
-  }
-
 case class ScalaCheckEffectFunction1[F[_]: MonadThrow, T, R](
     execute: T => F[R],
     arbitrary: Arbitrary[T],
