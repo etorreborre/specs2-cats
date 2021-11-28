@@ -17,7 +17,7 @@ class ScalaCheckEffectMatchersApiSpec extends Specification, ScalaCheckEffect, I
  A ScalaCheck property can be used in the body of an Example
  ${forAllF { (i: Int) => IO(i > 0 || i <= 0) }}
 
- The `prop` method can be used to create a property from a function
+ The `propF` method can be used to create a property from a function
     returning a result
     ${propF { (i: Int) => IO(success) }}
     returning a match result
