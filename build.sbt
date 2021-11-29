@@ -10,7 +10,9 @@ lazy val specs2Cats = project
     cats.jvm,
     cats.js,
     catsEffect.jvm,
-    catsEffect.js
+    catsEffect.js,
+    scalacheckEffect.jvm,
+    scalacheckEffect.js
   )
 
 val platforms = List(JVMPlatform, JSPlatform)
@@ -43,17 +45,37 @@ lazy val catsEffect = crossProject(platforms: _*)
   .jsSettings(buildJsSettings)
   .dependsOn(cats)
 
+lazy val scalacheckEffect = crossProject(platforms: _*)
+  .crossType(CrossType.Pure)
+  .withoutSuffixFor(jvm)
+  .in(file("scalacheck-effect"))
+  .settings(
+    organization := "org.specs2",
+    name := "specs2-scalacheck-effect",
+    scalacheckEffectDependencies,
+    buildSettings
+  )
+  .jvmSettings(buildJvmSettings)
+  .jsSettings(buildJsSettings)
+  .dependsOn(catsEffect % Test)
+
 /** SETTINGS */
 
 val Scala3 = "3.1.0"
 ThisBuild / crossScalaVersions := Seq(Scala3)
 ThisBuild / scalaVersion := Scala3
 
+val Specs2Version = "5.0.0-RC-21"
+
 val catsDependencies = libraryDependencies ++= Seq(
-  "org.specs2" %%% "specs2-core" % "5.0.0-RC-21",
+  "org.specs2" %%% "specs2-core" % Specs2Version,
   "org.typelevel" %%% "cats-core" % "2.7.0"
 )
 val catsEffectDependencies = libraryDependencies += "org.typelevel" %%% "cats-effect" % "3.3.0"
+val scalacheckEffectDependencies = libraryDependencies ++= Seq(
+  "org.specs2" %%% "specs2-scalacheck" % Specs2Version,
+  "org.typelevel" %%% "scalacheck-effect" % "1.0.3"
+)
 
 lazy val rootSettings =
   compilationSettings ++
