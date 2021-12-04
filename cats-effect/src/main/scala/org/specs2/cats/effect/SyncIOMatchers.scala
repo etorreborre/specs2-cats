@@ -9,6 +9,7 @@ import org.specs2.matcher.Matcher
 import org.specs2.matcher.ValueCheck
 import org.specs2.matcher.ValueChecks
 
+import scala.annotation.targetName
 import scala.reflect.ClassTag
 
 trait SyncIOMatchers extends ValueChecks:
@@ -22,9 +23,11 @@ trait SyncIOMatchers extends ValueChecks:
         }
         .unsafeRunSync()
 
+  @targetName("syncIOBeSuccess")
   def beSuccess[A]: Matcher[SyncIO[A]] =
     beSuccess(ValueCheck.alwaysOk)
 
+  @targetName("syncIOBeSuccess")
   def beSuccess[A](check: ValueCheck[A]): Matcher[SyncIO[A]] =
     Matcher[SyncIO[A], Result](
       _.unsafeFoldOutcome(
@@ -33,9 +36,11 @@ trait SyncIOMatchers extends ValueChecks:
       )
     )
 
+  @targetName("syncIOBeError")
   def beError[A]: Matcher[SyncIO[A]] =
     beError(ValueCheck.alwaysOk)
 
+  @targetName("syncIOBeError")
   def beError[A](check: ValueCheck[Throwable]): Matcher[SyncIO[A]] =
     Matcher[SyncIO[A], Result](
       _.unsafeFoldOutcome(
