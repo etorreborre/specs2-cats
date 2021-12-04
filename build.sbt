@@ -3,7 +3,7 @@ lazy val specs2Cats = project
   .in(file("."))
   .enablePlugins(GitBranchPrompt, GitVersioning)
   .settings(
-    name := "specs2-cats-root",
+    name := "specs2-cats",
     rootSettings
   )
   .aggregate(
