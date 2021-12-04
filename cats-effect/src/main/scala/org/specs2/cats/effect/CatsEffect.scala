@@ -1,3 +1,13 @@
 package org.specs2.cats.effect
 
-trait CatsEffect extends IOExecution, IOMatchers, SyncIOExecution, SyncIOMatchers, CatsResourceExecution
+import cats.effect.unsafe.IORuntime
+import org.specs2.concurrent.ExecutionEnv
+
+trait CatsEffect(using
+    executionEnv: ExecutionEnv = ExecutionEnv.fromGlobalExecutionContext,
+    ioRuntime: IORuntime = IORuntime.global
+) extends IOExecution,
+      IOMatchers,
+      SyncIOExecution,
+      SyncIOMatchers,
+      CatsResourceExecution
