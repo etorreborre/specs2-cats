@@ -26,7 +26,7 @@ lazy val cats = crossProject(platforms: _*)
     organization := "org.specs2",
     name := "specs2-cats",
     catsDependencies,
-    buildSettings
+    commonSettings
   )
   .jvmSettings(buildJvmSettings)
   .jsSettings(buildJsSettings)
@@ -39,7 +39,7 @@ lazy val catsEffect = crossProject(platforms: _*)
     organization := "org.specs2",
     name := "specs2-cats-effect",
     catsEffectDependencies,
-    buildSettings
+    commonSettings
   )
   .jvmSettings(buildJvmSettings)
   .jsSettings(buildJsSettings)
@@ -53,7 +53,7 @@ lazy val scalacheckEffect = crossProject(platforms: _*)
     organization := "org.specs2",
     name := "specs2-scalacheck-effect",
     scalacheckEffectDependencies,
-    buildSettings
+    commonSettings
   )
   .jvmSettings(buildJvmSettings)
   .jsSettings(buildJsSettings)
@@ -62,9 +62,6 @@ lazy val scalacheckEffect = crossProject(platforms: _*)
 /** SETTINGS */
 
 val Scala3 = "3.1.0"
-ThisBuild / crossScalaVersions := Seq(Scala3)
-ThisBuild / scalaVersion := Scala3
-
 val Specs2Version = "5.0.0-RC-21"
 
 val catsDependencies = libraryDependencies ++= Seq(
@@ -77,8 +74,21 @@ val scalacheckEffectDependencies = libraryDependencies ++= Seq(
   "org.typelevel" %%% "scalacheck-effect" % "1.0.3"
 )
 
+lazy val specs2CatsSettings = Seq(
+  organization := "org.specs2",
+  homepage := Some(url("https://github.com/etorreborre/specs2-cats")),
+  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  developers := List(
+    Developer("armanbilge", "Arman Bilge", "armanbilge@gmail.com", url("https://github.com/armanbilge")),
+    Developer("etorreborre", "Eric Torreborre", "etorreborre@yahoo.com", url("https://github.com/etorreborre"))
+  ),
+  ThisBuild / crossScalaVersions := Seq(Scala3),
+  ThisBuild / scalaVersion := Scala3
+)
+
 lazy val rootSettings =
-  compilationSettings ++
+  specs2CatsSettings ++
+    compilationSettings ++
     testingSettings ++
     releaseSettings ++
     Seq(
@@ -87,8 +97,9 @@ lazy val rootSettings =
       mimaPreviousArtifacts := Set.empty
     )
 
-lazy val buildSettings =
-  compilationSettings ++
+lazy val commonSettings =
+  specs2CatsSettings ++
+    compilationSettings ++
     testingSettings
 
 lazy val buildJvmSettings = testingJvmSettings
