@@ -41,7 +41,7 @@ trait AsResultPropF extends ScalaCheckEffectPropertyCheck with AsResultPropFLowI
 
 trait AsResultPropFLowImplicits extends ScalaCheckEffectPropertyCheck with ScalaCheckParameters:
 
-  given scalaCheckPropertyAsExecution[F[_]: MonadThrow, S <: ScalaCheckEffectProperty[F]](using
+  given scalaCheckEffectPropertyAsExecution[F[_]: MonadThrow, S <: ScalaCheckEffectProperty[F]](using
       exec: AsExecution[F[Result]]
   ): AsExecution[S] with
     def execute(prop: =>S): Execution =
