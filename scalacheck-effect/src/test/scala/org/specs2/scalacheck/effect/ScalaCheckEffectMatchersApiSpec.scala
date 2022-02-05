@@ -63,7 +63,7 @@ class ScalaCheckEffectMatchersApiSpec extends Specification, ScalaCheckEffect, I
    ${propF { (i: String, j: Int) => IO(i === i) }.pretties(_.toString, _.toString)}
    to specify the pretty for collected data
    ${propF { (i: String, j: Int) => IO(i === i) }.collectAll
-    .prettyFreqMap((fq: FreqMap[Set[Any]]) => fq.total.toString)}
+      .prettyFreqMap((fq: FreqMap[Set[Any]]) => fq.total.toString)}
    ${propF { (i: String, j: Int) => IO(i === i) }.collectAll.prettyFreqMap(_.toString)}
 
    Collect
