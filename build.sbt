@@ -62,7 +62,7 @@ lazy val scalacheckEffect = crossProject(platforms: _*)
 /** SETTINGS */
 
 val Scala3 = "3.1.1"
-val Specs2Version = "5.0.0-RC-22"
+val Specs2Version = "5.0.0"
 
 val catsDependencies = libraryDependencies ++= Seq(
   "org.specs2" %%% "specs2-core" % Specs2Version,
