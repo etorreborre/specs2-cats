@@ -1,8 +1,7 @@
 package org.specs2.cats.effect
 
-import cats.effect.IO
-import cats.effect.Ref
-import cats.effect.Resource
+import cats.data.{Kleisli, StateT}
+import cats.effect.{IO, Ref, Resource, Sync}
 import org.specs2.Specification
 import org.specs2.execute.Result
 
@@ -58,3 +57,28 @@ object GlobalCatsResourceSpec:
 class GlobalCatsResource1Spec extends GlobalCatsResourceSpec
 class GlobalCatsResource2Spec extends GlobalCatsResourceSpec
 class GlobalCatsResource3Spec extends GlobalCatsResourceSpec
+
+class TransformersResourceSpec extends Specification, IOMatchers, CatsResource[String]:
+  override def resource: Resource[IO, String] = Resource.pure("outer-param")
+
+  def kleisliProgram: Kleisli[IO, String, Result] = for {
+    weCanUse <- Kleisli.pure[IO, String, String]("We can use")
+    ou <- Kleisli((outerParam: String) => IO.pure(outerParam.take(2)))
+    composed <- Kleisli(outerParam => IO.pure(s"$weCanUse $outerParam res${ou}rce in IO with Kleisli"))
+  } yield {
+    composed must beEqualTo("We can use outer-param resource in IO with Kleisli")
+  }
+
+  def stateProgram: StateT[IO, String, Result] = for {
+    ou <- StateT.get[IO, String].map(_.take(2))
+    _ <- StateT.modify[IO, String]("We can use " + _)
+    _ <- StateT.modify[IO, String](_ + s" res${ou}rce in IO with StateT")
+    composed <- StateT.get[IO, String]
+  } yield {
+    composed must beEqualTo("We can use outer-param resource in IO with StateT")
+  }
+
+  def is = s2"""
+    The resource execution can run Kleisli $kleisliProgram
+    The resource execution can run StateT $stateProgram
+  """
