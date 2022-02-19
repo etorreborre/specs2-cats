@@ -33,7 +33,7 @@ trait CatsResource[T](using ioRuntime: IORuntime = IORuntime.global) extends Spe
     }
 
   /** When the stateful execution requires initial state prepared by resource */
-  given stateTexecution[F[_]: FlatMap, R](using ae: AsExecution[T => F[R]]): AsExecution[StateT[F, T, R]] =
+  given stateTExecution[F[_]: FlatMap, R](using ae: AsExecution[T => F[R]]): AsExecution[StateT[F, T, R]] =
     new AsExecution[StateT[F, T, R]] {
       override def execute(t: =>StateT[F, T, R]): Execution = ae.execute(resourceState => t.runA(resourceState))
     }
