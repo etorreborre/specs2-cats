@@ -3,6 +3,8 @@ package org.specs2.cats.effect
 import cats.effect.*
 import org.specs2.Specification
 import org.specs2.concurrent.*
+import org.specs2.matcher.ValueChecks
+import org.specs2.specification.core.Execution
 
 import scala.concurrent.duration.*
 
@@ -28,3 +30,12 @@ class IOMatchersSpec extends Specification with IOMatchers with IOExecution:
   def matcher5 = IO.canceled must beCanceled
 
   def result1 = IO("ok" === "ok")
+
+class IOTestControlSpec extends Specification with ValueChecks with TestControlIOExecution:
+
+  def fakeSleepExecution = (IO.sleep(10.days).as(1 === 1): Execution).setTimeout(10.seconds)
+
+  def is = s2"""
+    An IO test runs in mock time with TestControlIOExecution
+    $fakeSleepExecution
+  """

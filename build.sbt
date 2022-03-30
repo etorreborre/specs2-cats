@@ -68,7 +68,10 @@ val catsDependencies = libraryDependencies ++= Seq(
   "org.specs2" %%% "specs2-core" % Specs2Version,
   "org.typelevel" %%% "cats-core" % "2.7.0"
 )
-val catsEffectDependencies = libraryDependencies += "org.typelevel" %%% "cats-effect" % "3.3.8"
+val catsEffectDependencies = libraryDependencies ++= Seq(
+  "org.typelevel" %%% "cats-effect" % "3.3.8",
+  "org.typelevel" %%% "cats-effect-testkit" % "3.3.8"
+)
 val scalacheckEffectDependencies = libraryDependencies ++= Seq(
   "org.specs2" %%% "specs2-scalacheck" % Specs2Version,
   "org.typelevel" %%% "scalacheck-effect" % "1.0.3"
