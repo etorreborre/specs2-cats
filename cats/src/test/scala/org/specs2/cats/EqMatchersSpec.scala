@@ -1,7 +1,7 @@
 package org.specs2.cats
 
 import cats.kernel.Eq
-import cats.implicits.*
+import cats.syntax.all.*
 import org.specs2.*
 
 class EqMatchersSpec extends Specification with EqDiffable:
@@ -17,11 +17,8 @@ class EqMatchersSpec extends Specification with EqDiffable:
     Person("alice", 30) === Person("alice", 31)
 
   def eq2 =
-    (Person("alice", 30) === Person("bob", 31)).message === "Person(alice,30) != Person(bob,31)"
+    (Person("alice", 30) === Person("bob", 31)).message =!= "Person(alice,30) != Person(bob,31)"
 
   case class Person(name: String, age: Int)
 
-  given Eq[Person] =
-    new Eq:
-      def eqv(p1: Person, p2: Person): Boolean =
-        p1.name == p2.name
+  given Eq[Person] = Eq.by(_.name)

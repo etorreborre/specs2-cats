@@ -1,7 +1,7 @@
 package org.specs2.cats
 
 import cats.kernel.Eq
-import cats.implicits.*
+import cats.syntax.all.*
 import org.specs2.matcher.describe.*
 import org.specs2.text.Indent.*
 
@@ -17,9 +17,9 @@ trait EqDiffable:
 
           def render: String =
             if identical then
-              s"$actual == $expected"
+              s"$actual === $expected"
             else
-              s"$actual != $expected"
+              s"$actual =!= $expected"
 
           override def render(indent: String): String =
             render.indentWith(indent)
