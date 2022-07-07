@@ -8,7 +8,7 @@ import org.specs2.text.Indent.*
 /** Matchers for the Eq datatype
   */
 trait EqDiffable:
-  given eqDiffable[T : Eq]: Diffable[T] =
+  given eqDiffable[T: Eq]: Diffable[T] =
     new Diffable[T]:
       def diff(actual: T, expected: T): ComparisonResult =
         new ComparisonResult:
@@ -16,10 +16,8 @@ trait EqDiffable:
             actual.eqv(expected)
 
           def render: String =
-            if identical then
-              s"$actual === $expected"
-            else
-              s"$actual =!= $expected"
+            if identical then s"$actual === $expected"
+            else s"$actual =!= $expected"
 
           override def render(indent: String): String =
             render.indentWith(indent)
