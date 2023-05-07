@@ -7,7 +7,7 @@ addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.2.0")
 
 // release management
 addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.14.2")
-addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.7")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.12")
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.1")
 
 resolvers += Resolver.url("sonatype", new URL("https://oss.sonatype.org/content/repositories/releases"))(
