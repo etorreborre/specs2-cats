@@ -6,7 +6,7 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.11.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.2.0")
 
 // release management
-addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.14.2")
+addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.17.0")
 addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.7")
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.1")
 
