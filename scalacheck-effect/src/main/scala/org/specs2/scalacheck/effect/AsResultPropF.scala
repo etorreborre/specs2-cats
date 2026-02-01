@@ -33,7 +33,10 @@ trait AsResultPropF extends ScalaCheckEffectPropertyCheck with AsResultPropFLowI
       }
 
   /** implicit typeclass instance to create examples from a Prop */
-  given propFAsExecution[F[_]: MonadThrow](using p: Parameters, pfq: FreqMap[Set[Any]] => Pretty)(using
+  given propFAsExecution[F[_]: MonadThrow](using
+      p: Parameters,
+      pfq: FreqMap[Set[Any]] => Pretty
+  )(using
       exec: AsExecution[F[Result]]
   ): AsExecution[PropF[F]] with
     def execute(propF: =>PropF[F]): Execution =
